@@ -52,6 +52,9 @@
             this.TMRReloj = new System.Windows.Forms.Timer(this.components);
             this.TMRRelojAnchuraPrioritaria = new System.Windows.Forms.Timer(this.components);
             this.LBL11 = new System.Windows.Forms.Label();
+            this.BTNH3 = new System.Windows.Forms.Button();
+            this.BTNH2 = new System.Windows.Forms.Button();
+            this.BTNH1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // LBL22
@@ -330,7 +333,7 @@
             // 
             // TMRRelojAnchuraPrioritaria
             // 
-            this.TMRRelojAnchuraPrioritaria.Interval = 500;
+            this.TMRRelojAnchuraPrioritaria.Interval = 1000;
             this.TMRRelojAnchuraPrioritaria.Tick += new System.EventHandler(this.TMRRelojAnchuraPrioritaria_Tick);
             // 
             // LBL11
@@ -348,11 +351,50 @@
             this.LBL11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.LBL11.Click += new System.EventHandler(this.LBL11_Click);
             // 
+            // BTNH3
+            // 
+            this.BTNH3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTNH3.Location = new System.Drawing.Point(490, 350);
+            this.BTNH3.Margin = new System.Windows.Forms.Padding(2);
+            this.BTNH3.Name = "BTNH3";
+            this.BTNH3.Size = new System.Drawing.Size(81, 41);
+            this.BTNH3.TabIndex = 32;
+            this.BTNH3.Text = "H3";
+            this.BTNH3.UseVisualStyleBackColor = true;
+            this.BTNH3.Click += new System.EventHandler(this.BTNH3_Click);
+            // 
+            // BTNH2
+            // 
+            this.BTNH2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTNH2.Location = new System.Drawing.Point(490, 304);
+            this.BTNH2.Margin = new System.Windows.Forms.Padding(2);
+            this.BTNH2.Name = "BTNH2";
+            this.BTNH2.Size = new System.Drawing.Size(81, 41);
+            this.BTNH2.TabIndex = 31;
+            this.BTNH2.Text = "H2";
+            this.BTNH2.UseVisualStyleBackColor = true;
+            this.BTNH2.Click += new System.EventHandler(this.BTNH2_Click);
+            // 
+            // BTNH1
+            // 
+            this.BTNH1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTNH1.Location = new System.Drawing.Point(490, 257);
+            this.BTNH1.Margin = new System.Windows.Forms.Padding(2);
+            this.BTNH1.Name = "BTNH1";
+            this.BTNH1.Size = new System.Drawing.Size(81, 41);
+            this.BTNH1.TabIndex = 30;
+            this.BTNH1.Text = "H1";
+            this.BTNH1.UseVisualStyleBackColor = true;
+            this.BTNH1.Click += new System.EventHandler(this.BTNH1_Click);
+            // 
             // FRMPuzzle
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(651, 486);
+            this.Controls.Add(this.BTNH3);
+            this.Controls.Add(this.BTNH2);
+            this.Controls.Add(this.BTNH1);
             this.Controls.Add(this.BTNEuristico);
             this.Controls.Add(this.BTNEsFinal);
             this.Controls.Add(this.BTNGenerarHijos);
@@ -405,5 +447,8 @@
         private System.Windows.Forms.Button BTNEuristico;
         private System.Windows.Forms.Timer TMRReloj;
         private System.Windows.Forms.Timer TMRRelojAnchuraPrioritaria;
+        private System.Windows.Forms.Button BTNH3;
+        private System.Windows.Forms.Button BTNH2;
+        private System.Windows.Forms.Button BTNH1;
     }
 }

@@ -8,17 +8,11 @@ namespace _16_Puzzle
 {
     public static class CLAlgoritmosDeBusqueda
     {
-        private const int TAMANO = 4;
-        private const int ENCONTRADO = -1;
+        private const int tamaño = 4;
+        private const int detectado = -1;
 
-        /// <summary>
-        /// Resuelve el puzzle 4x4 mediante IDA*.
-        ///
-        /// La solución se devuelve en el mismo orden que tu algoritmo anterior:
-        /// estado final -> ... -> estado inicial.
-        /// </summary>
-        public static List<CLEstado> AlgoritmoIDAEstrella(
-            CLEstado Inicial)
+        
+        public static List<CLEstado> AlgoritmoIDAEstrella(CLEstado Inicial)
         {
             List<CLEstado> SinSolucion =
                 new List<CLEstado>();
@@ -26,10 +20,7 @@ namespace _16_Puzzle
             if (Inicial == null)
                 return SinSolucion;
 
-            /*
-             * Evita ejecutar el algoritmo cuando el puzzle
-             * matemáticamente no tiene solución.
-             */
+            
             if (!EsSolucionable(Inicial))
                 return SinSolucion;
 
@@ -60,16 +51,9 @@ namespace _16_Puzzle
                     heuristicaInicial
                 );
 
-                if (resultado == ENCONTRADO)
+                if (resultado == detectado)
                 {
-                    /*
-                     * Camino está en orden:
-                     * inicial -> ... -> final.
-                     *
-                     * Se invierte para conservar el comportamiento
-                     * de tu algoritmo anterior:
-                     * final -> ... -> inicial.
-                     */
+                    
                     List<CLEstado> Solucion =
                         new List<CLEstado>(Camino);
 
@@ -78,16 +62,11 @@ namespace _16_Puzzle
                     return Solucion;
                 }
 
-                /*
-                 * No existen más estados que explorar.
-                 */
+                
                 if (resultado == int.MaxValue)
                     return SinSolucion;
 
-                /*
-                 * El próximo límite es el menor valor f(n)
-                 * que excedió el límite anterior.
-                 */
+                
                 limite = resultado;
             }
         }
@@ -105,24 +84,19 @@ namespace _16_Puzzle
             int funcionEvaluacion =
                 costoActual + heuristicaActual;
 
-            /*
-             * Si g(n) + h(n) supera el límite actual,
-             * se detiene esta rama.
-             */
+           
             if (funcionEvaluacion > limite)
                 return funcionEvaluacion;
 
             if (Actual.EsFinal())
-                return ENCONTRADO;
+                return detectado;
 
             int siguienteLimite = int.MaxValue;
 
             List<CLEstado> Hijos =
                 Actual.GenerarHijos();
 
-            /*
-             * Se calcula la heurística una sola vez por hijo.
-             */
+            
             List<HijoEvaluado> HijosEvaluados =
                 new List<HijoEvaluado>();
 
@@ -130,12 +104,7 @@ namespace _16_Puzzle
             {
                 ulong claveHijo = CrearClave(Hijo);
 
-                /*
-                 * Evitar ciclos.
-                 *
-                 * Por ejemplo:
-                 * A -> B -> A
-                 */
+               
                 if (EstadosDelCamino.Contains(claveHijo))
                     continue;
 
@@ -151,11 +120,7 @@ namespace _16_Puzzle
                 );
             }
 
-            /*
-             * Primero se exploran los hijos con menor heurística.
-             * Esto no cambia IDA*, pero generalmente acelera
-             * bastante la búsqueda.
-             */
+            
             HijosEvaluados.Sort(
                 delegate (
                     HijoEvaluado Primero,
@@ -185,17 +150,11 @@ namespace _16_Puzzle
                     Evaluado.Heuristica
                 );
 
-                /*
-                 * Cuando se encuentra la solución no se elimina
-                 * el hijo del camino, porque ese camino completo
-                 * será devuelto.
-                 */
-                if (resultado == ENCONTRADO)
-                    return ENCONTRADO;
+               
+                if (resultado == detectado)
+                    return detectado;
 
-                /*
-                 * Retroceso de la búsqueda en profundidad.
-                 */
+                
                 Camino.RemoveAt(Camino.Count - 1);
                 EstadosDelCamino.Remove(Evaluado.Clave);
 
@@ -208,9 +167,7 @@ namespace _16_Puzzle
 
         #region Heurística
 
-        /// <summary>
-        /// H = distancia Manhattan + conflicto lineal.
-        /// </summary>
+   
         public static int CalcularHeuristica(
             CLEstado Estado)
         {
@@ -223,34 +180,25 @@ namespace _16_Puzzle
         {
             int distanciaTotal = 0;
 
-            for (int fila = 0; fila < TAMANO; fila++)
+            for (int fila = 0; fila < tamaño; fila++)
             {
                 for (int columna = 0;
-                     columna < TAMANO;
+                     columna < tamaño;
                      columna++)
                 {
                     int valor =
                         Estado.tablero[fila, columna];
 
-                    /*
-                     * El espacio vacío no se toma en cuenta.
-                     */
+                    
                     if (valor == 0)
                         continue;
 
-                    /*
-                     * Estado meta utilizado:
-                     *
-                     *  1  2  3  4
-                     *  5  6  7  8
-                     *  9 10 11 12
-                     * 13 14 15  0
-                     */
+                    
                     int filaMeta =
-                        (valor - 1) / TAMANO;
+                        (valor - 1) / tamaño;
 
                     int columnaMeta =
-                        (valor - 1) % TAMANO;
+                        (valor - 1) % tamaño;
 
                     distanciaTotal +=
                         Math.Abs(fila - filaMeta) +
@@ -266,16 +214,14 @@ namespace _16_Puzzle
         {
             int penalizacion = 0;
 
-            /*
-             * Conflictos en las filas.
-             */
-            for (int fila = 0; fila < TAMANO; fila++)
+            
+            for (int fila = 0; fila < tamaño; fila++)
             {
                 List<int> columnasMeta =
                     new List<int>();
 
                 for (int columna = 0;
-                     columna < TAMANO;
+                     columna < tamaño;
                      columna++)
                 {
                     int valor =
@@ -285,28 +231,19 @@ namespace _16_Puzzle
                         continue;
 
                     int filaMeta =
-                        (valor - 1) / TAMANO;
+                        (valor - 1) / tamaño;
 
                     int columnaMeta =
-                        (valor - 1) % TAMANO;
+                        (valor - 1) % tamaño;
 
-                    /*
-                     * Solo interesan fichas que ya están
-                     * en su fila final.
-                     */
+                    
                     if (filaMeta == fila)
                     {
                         columnasMeta.Add(columnaMeta);
                     }
                 }
 
-                /*
-                 * Las fichas fuera de la subsecuencia creciente
-                 * necesitan abandonar temporalmente la fila.
-                 *
-                 * Cada una requiere como mínimo dos movimientos
-                 * adicionales: salir y volver a entrar.
-                 */
+              
                 penalizacion += 2 *
                     (columnasMeta.Count -
                      LongitudSubsecuenciaCreciente(
@@ -314,18 +251,15 @@ namespace _16_Puzzle
                      ));
             }
 
-            /*
-             * Conflictos en las columnas.
-             */
             for (int columna = 0;
-                 columna < TAMANO;
+                 columna < tamaño;
                  columna++)
             {
                 List<int> filasMeta =
                     new List<int>();
 
                 for (int fila = 0;
-                     fila < TAMANO;
+                     fila < tamaño;
                      fila++)
                 {
                     int valor =
@@ -335,15 +269,12 @@ namespace _16_Puzzle
                         continue;
 
                     int filaMeta =
-                        (valor - 1) / TAMANO;
+                        (valor - 1) / tamaño;
 
                     int columnaMeta =
-                        (valor - 1) % TAMANO;
+                        (valor - 1) % tamaño;
 
-                    /*
-                     * Solo interesan fichas que ya están
-                     * en su columna final.
-                     */
+                    
                     if (columnaMeta == columna)
                     {
                         filasMeta.Add(filaMeta);
@@ -406,10 +337,10 @@ namespace _16_Puzzle
 
             int filaCeroDesdeAbajo = 0;
 
-            for (int fila = 0; fila < TAMANO; fila++)
+            for (int fila = 0; fila < tamaño; fila++)
             {
                 for (int columna = 0;
-                     columna < TAMANO;
+                     columna < tamaño;
                      columna++)
                 {
                     int valor =
@@ -417,14 +348,9 @@ namespace _16_Puzzle
 
                     if (valor == 0)
                     {
-                        /*
-                         * Fila 3 -> 1 desde abajo.
-                         * Fila 2 -> 2 desde abajo.
-                         * Fila 1 -> 3 desde abajo.
-                         * Fila 0 -> 4 desde abajo.
-                         */
+                        
                         filaCeroDesdeAbajo =
-                            TAMANO - fila;
+                            tamaño - fila;
                     }
                     else
                     {
@@ -448,18 +374,7 @@ namespace _16_Puzzle
                 }
             }
 
-            /*
-             * Para una matriz 4x4 con meta:
-             *
-             *  1  2  3  4
-             *  5  6  7  8
-             *  9 10 11 12
-             * 13 14 15  0
-             *
-             * El puzzle es solucionable cuando la suma
-             * de inversiones y fila del cero desde abajo
-             * es impar.
-             */
+            
             return (inversiones + filaCeroDesdeAbajo) % 2 == 1;
         }
 
@@ -473,16 +388,11 @@ namespace _16_Puzzle
             ulong clave = 0;
             int desplazamiento = 0;
 
-            /*
-             * Cada ficha utiliza 4 bits porque sus valores
-             * se encuentran entre 0 y 15.
-             *
-             * 16 fichas x 4 bits = 64 bits.
-             */
-            for (int fila = 0; fila < TAMANO; fila++)
+            
+            for (int fila = 0; fila < tamaño; fila++)
             {
                 for (int columna = 0;
-                     columna < TAMANO;
+                     columna < tamaño;
                      columna++)
                 {
                     ulong valor =
