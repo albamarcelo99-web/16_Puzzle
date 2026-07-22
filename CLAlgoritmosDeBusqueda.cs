@@ -8,10 +8,14 @@ namespace _16_Puzzle
 {
     public static class CLAlgoritmosDeBusqueda
     {
-        private const int tamaño = 4;
         private const int detectado = -1;
+        private const int tamaño = 4;
 
-        
+  
+        // Implementación del algoritmo IDA*.
+        // Recibe un estado inicial y devuelve la lista de estados que forman
+        // la solución (si se encuentra), ordenada desde el estado inicial
+        // hasta el estado final. Devuelve lista vacía si no hay solución.
         public static List<CLEstado> AlgoritmoIDAEstrella(CLEstado Inicial)
         {
             List<CLEstado> SinSolucion =
@@ -71,6 +75,14 @@ namespace _16_Puzzle
             }
         }
 
+        // Búsqueda recursiva usada por IDA*.
+        // Camino: pila de estados desde la raíz al estado actual.
+        // EstadosDelCamino: conjunto de claves para detección rápida de ciclos.
+        // costoActual: g(n) (costo desde la raíz hasta el nodo actual).
+        // limite: límite f = g + h para la iteración actual.
+        // heuristicaActual: h(n) del nodo actual.
+        // Devuelve detectado (-1) si encontró la solución, int.MaxValue si no hay camino
+        // dentro de los límites, o el siguiente límite mínimo a considerar.
         private static int Buscar(
             List<CLEstado> Camino,
             HashSet<ulong> EstadosDelCamino,
@@ -165,9 +177,11 @@ namespace _16_Puzzle
             return siguienteLimite;
         }
 
-        #region Heurística
+        #region MetodoHeurístico
+        // Métodos para calcular heurísticas utilizadas por los algoritmos
 
    
+        // Heurística combinada usada en IDA*: distancia Manhattan + conflictos lineales
         public static int CalcularHeuristica(
             CLEstado Estado)
         {
@@ -175,6 +189,8 @@ namespace _16_Puzzle
                    CalcularConflictoLineal(Estado);
         }
 
+        // Calcula la suma de las distancias Manhattan de cada ficha respecto
+        // a su posición objetivo. Ignora la ficha 0 (espacio vacío).
         private static int CalcularDistanciaManhattan(
             CLEstado Estado)
         {
@@ -209,6 +225,10 @@ namespace _16_Puzzle
             return distanciaTotal;
         }
 
+        // Calcula la penalización por conflictos lineales (linear conflict).
+        // Para cada fila y columna, identifica las fichas que pertenecen a
+        // esa misma fila/columna objetivo y suma una penalización proporcional
+        // a las piezas que están fuera de orden relativo.
         private static int CalcularConflictoLineal(
             CLEstado Estado)
         {
@@ -291,6 +311,8 @@ namespace _16_Puzzle
             return penalizacion;
         }
 
+        // Calcula la longitud de la subsecuencia creciente más larga en la lista
+        // (utilizado para medir cuántas piezas están en orden relativo).
         private static int LongitudSubsecuenciaCreciente(
             List<int> Valores)
         {
@@ -327,8 +349,11 @@ namespace _16_Puzzle
 
         #endregion
 
-        #region Solubilidad
+        // Métodos para determinar si un tablero es solucionable.
 
+        // Comprueba la solvencia del puzzle calculando las inversiones y
+        // la fila del cero desde abajo. Retorna true si la configuración
+        // es solucionable según la paridad requerida para el 4x4.
         private static bool EsSolucionable(
             CLEstado Estado)
         {
@@ -378,9 +403,11 @@ namespace _16_Puzzle
             return (inversiones + filaCeroDesdeAbajo) % 2 == 1;
         }
 
-        #endregion
 
-        #region Clave del tablero
+      
+        // Convierte el tablero en una clave de tipo ulong compactando cada
+        // ficha en 4 bits. Esto permite comparaciones rápidas y almacenamiento
+        // en conjuntos (HashSet) para detección de ciclos.
 
         private static ulong CrearClave(
             CLEstado Estado)
@@ -406,9 +433,10 @@ namespace _16_Puzzle
             return clave;
         }
 
-        #endregion
+      
 
-        #region Clase auxiliar
+        // Clase interna utilizada para mantener información sobre hijos
+        // generados durante la expansión: el estado, su clave y su heurística.
 
         private sealed class HijoEvaluado
         {
@@ -427,8 +455,7 @@ namespace _16_Puzzle
                 Clave = clave;
                 Heuristica = heuristica;
             }
-        }
 
-        #endregion
+        }
     }
 }

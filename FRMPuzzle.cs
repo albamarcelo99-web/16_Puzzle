@@ -10,24 +10,37 @@ using System.Windows.Forms;
 
 namespace _16_Puzzle
 {
+    
     public partial class FRMPuzzle : Form
     {
+        
         private int contador = 0;
+        // Guarda la posición (fila+columna) donde está el 0 (espacio vacío)
         private String pos0;
+        // Matriz temporal de textos de los labels que representan el tablero
         private String[,] posiciones;
+        // Índice/contador usado para reproducir la solución (animación)
         private int ContAnchura = 0;
+        // Lista que contiene la secuencia de estados solución generada por el algoritmo
         private List<CLEstado> Resultado = new List<CLEstado>();
+        // Bandera que indica dirección/estado durante la reproducción de la solución
         bool estado = false;
+        // Generador de números aleatorios para el desordenado
         Random rn = new Random();
+        // Constructor: inicializa componentes del formulario
+        // Aquí solo se inicializa la interfaz (entidades visuales creadas en el diseñador)
         public FRMPuzzle()
         {
             InitializeComponent();
         }
 
+       
         private void BTNDesordenar_Click(object sender, EventArgs e)
         {
             TMRReloj.Enabled = true;
         }
+        // Copia los valores de un objeto CLEstado al tablero visual (labels).
+        // Se utiliza para mostrar estados concretos (por ejemplo, pasos de la solución).
         private void EstadoATablero(CLEstado Estado)
         {
             LBL00.Text = Estado.tablero[0, 0].ToString();
@@ -203,7 +216,7 @@ namespace _16_Puzzle
         { LBL30, LBL31, LBL32, LBL33 }
     };
 
-            if (contador < 50)
+            if (contador < 100)
             {
                 contador++;
                 LBLContador.Text = contador.ToString();
@@ -211,7 +224,7 @@ namespace _16_Puzzle
                 int fila0 = -1;
                 int columna0 = -1;
 
-                // Buscar la posición del espacio vacío.
+                
                 for (int i = 0; i < 4; i++)
                 {
                     for (int j = 0; j < 4; j++)
@@ -229,8 +242,7 @@ namespace _16_Puzzle
                         break;
                 }
 
-                // Posibles movimientos:
-                // arriba, abajo, izquierda y derecha.
+               
                 int[,] movimientos =
                 {
             { -1,  0 },
@@ -255,13 +267,13 @@ namespace _16_Puzzle
                     }
                 }
 
-                // Elegir uno de los movimientos válidos.
+                
                 int aleatorio = rn.Next(0, movimientosValidos.Count);
 
                 int filaDestino = movimientosValidos[aleatorio][0];
                 int columnaDestino = movimientosValidos[aleatorio][1];
 
-                // Intercambiar el cero con la ficha vecina.
+                
                 labels[fila0, columna0].Text =
                     labels[filaDestino, columnaDestino].Text;
 
@@ -586,6 +598,7 @@ namespace _16_Puzzle
         }
         #endregion
 
+        // Muestra el valor de la heurística H1 del estado actual (por MessageBox).
         private void BTNH1_Click(object sender, EventArgs e)
         {
             CLEstado Inicial = new CLEstado(Convert.ToInt32(LBL00.Text),
@@ -608,6 +621,7 @@ namespace _16_Puzzle
             MessageBox.Show(Inicial.H1().ToString());
         }
 
+        // Muestra el valor de la heurística H2 del estado actual (por MessageBox).
         private void BTNH2_Click(object sender, EventArgs e)
         {
             CLEstado Inicial = new CLEstado(Convert.ToInt32(LBL00.Text),
@@ -630,6 +644,8 @@ namespace _16_Puzzle
             MessageBox.Show(Inicial.H2().ToString());
         }
 
+        // Muestra el valor almacenado en la propiedad h3 del estado (MessageBox).
+        // h3 parece ser otra heurística/medida precalculada en CLEstado.
         private void BTNH3_Click(object sender, EventArgs e)
         {
             CLEstado Inicial = new CLEstado(Convert.ToInt32(LBL00.Text),

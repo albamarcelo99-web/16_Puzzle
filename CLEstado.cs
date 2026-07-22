@@ -90,6 +90,9 @@ namespace _16_Puzzle
 
         #region Métodos
 
+        // Genera todos los estados hijos válidos moviendo la casilla '0'
+        // (espacio vacío) en las 4 direcciones posibles cuando corresponde.
+        // Cada hijo es un nuevo CLEstado con su padre apuntando al actual.
         public List<CLEstado> GenerarHijos()
         {
             List<CLEstado> Respuesta = new List<CLEstado>();
@@ -150,6 +153,8 @@ namespace _16_Puzzle
             return Respuesta;
         }
 
+        // Comprueba si el estado actual corresponde al estado final objetivo.
+        // El objetivo definido aquí es la disposición concreta usada por el proyecto.
         public bool EsFinal()
         {
             bool res = false;
@@ -177,6 +182,7 @@ namespace _16_Puzzle
             return res;
         }
 
+        // Compara dos estados elemento a elemento para determinar igualdad exacta.
         public bool EsIgual(CLEstado a)
         {
             for (int i = 0; i < 4; i++)
@@ -192,6 +198,8 @@ namespace _16_Puzzle
             return true;
         }
 
+        // Heurística H1: número de fichas fuera de lugar respecto a un estado meta
+        // concreto (excluye el 0).
         public int H1()
         {
             int piezasFueraDeLugar = 0;
@@ -199,9 +207,9 @@ namespace _16_Puzzle
             int[,] estadoMeta =
             {
                 {  1,  2,  3,  4 },
-                { 12, 13, 14,  5 },
-                { 11,  0, 15,  6 },
-                { 10,  9,  8,  7 }
+                { 5, 6, 7,  8 },
+                { 9,  10, 11,  12 },
+                { 13,  14, 15,  0 }
             };
 
             for (int fila = 0; fila < 4; fila++)
@@ -219,6 +227,8 @@ namespace _16_Puzzle
             return piezasFueraDeLugar;
         }
 
+        // Heurística H2: suma de distancias Manhattan desde cada ficha
+        // a su posición objetivo (ignora el 0).
         public int H2()
         {
             int distanciaTotal = 0;
@@ -226,9 +236,9 @@ namespace _16_Puzzle
             int[,] estadoMeta =
             {
                 {  1,  2,  3,  4 },
-                { 12, 13, 14,  5 },
-                { 11,  0, 15,  6 },
-                { 10,  9,  8,  7 }
+                { 5, 6, 7,  8 },
+                { 9,  10, 11,  12 },
+                { 13,  14, 15,  0 }
             };
 
             for (int fila = 0; fila < 4; fila++)
@@ -264,6 +274,8 @@ namespace _16_Puzzle
             return distanciaTotal;
         }
 
+        // Heurística H3: combina H2 con penalizaciones por borde y posiciones centrales.
+        // Esta heurística se almacena en el campo _h3 al crear el estado.
         private int H3()
         {
             int sumaS = 0;
